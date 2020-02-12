@@ -1,7 +1,9 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
+import textwrap
+
 class Room:
-    def __init__(self, name, description, n_to = None, e_to = None, s_to = None, w_to = None):
+    def __init__(self, name, description, n_to = None, e_to = None, s_to = None, w_to = None, item_list = []):
         self.name = name
         self.description = description
         
@@ -9,6 +11,8 @@ class Room:
         self.e_to = e_to
         self.s_to = s_to
         self.w_to = w_to
+
+        self.item_list = item_list
     
     def enter(self, user_input):
         if user_input == 'n':
@@ -29,3 +33,7 @@ class Room:
         available_directions.append("'w' for West") if self.w_to != None else None
 
         return available_directions
+
+    def print_items(self):
+        for i, item in enumerate(self.item_list):
+            print(textwrap.fill(f"> Item [{i + 1}]: {item}"))

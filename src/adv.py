@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 import textwrap
 
 # Declare all the rooms
@@ -45,6 +46,13 @@ room['narrow'].w_to = 'foyer'
 room['narrow'].n_to = 'treasure'
 room['treasure'].s_to = 'narrow'
 
+### Items:
+room['outside'].item_list = [Item("Stick", "It's brown and sticky."), Item("Newspaper", "It appears to be black and white and read all over.")]
+room['foyer'].item_list = []
+room['overlook'].item_list = []
+room['narrow'].item_list = []
+room['treasure'].item_list = []
+
 #
 # Main
 #
@@ -64,30 +72,44 @@ player = Player('Carnun', current_room_key)
 #
 # If the user enters "q", quit the game.
 
+print("- - - - - - - - - - - - - - - - - - - - - - \n")
+
 while current_room_key != 'QUIT':
     current_room = room[current_room_key]
 
     print(f'You are in {current_room.name}.')
     print(textwrap.fill(current_room.description))
+    current_room.print_items()
 
-    # Todo: make prompt dynamic!
+    prompt = "> Where would you like to go? "
+
+    prompt_directions = ""
     available_directions = current_room.get_available_directions()
-    prompt_middle = ""
     if len(available_directions) == 1:
-        prompt_middle = f"Enter {available_directions[0]}."
+        prompt_directions = f"> Enter {available_directions[0]}.\n"
     elif len(available_directions) == 2:
-        prompt_middle = f"Enter {available_directions[0]} or {available_directions[1]}."
+        prompt_directions = f"> Enter {available_directions[0]} or {available_directions[1]}.\n"
     elif len(available_directions) == 3:
-        prompt_middle = f"Enter {available_directions[0]}, {available_directions[1]}, or {available_directions[2]}."
+        prompt_directions = f"> Enter {available_directions[0]}, {available_directions[1]}, or {available_directions[2]}.\n"
     else:
-        prompt_middle = f"Enter {available_directions[0]}, {available_directions[1]}, {available_directions[2]}, or {available_directions[4]}."
-    prompt = f"> Where would you like to go? {prompt_middle} (Or enter 'q' to quit.) \n"
+        prompt_directions = f"> Enter {available_directions[0]}, {available_directions[1]}, {available_directions[2]}, or {available_directions[4]}.\n"
+    prompt += prompt_directions
+
+    prompt_items = "> Alternatively, enter "
+    for i, item in enumerate(current_room.item_list):
+        prompt_items += f"'{i + 1}' to pick up the {item.name} or "
+    prompt_items = prompt_items[:-4] + ".\n"
+    prompt += prompt_items
+
+    prompt += "> (Or enter 'q' to quit.) \n"
+    prompt += ">>> "
+
     user_input = input(prompt).lower()
 
     print("- - - - - - - - - - - - - - - - - - - - - - \n")
 
     if user_input == 'q':
-        print("You have quit the game. Bye!")
+        print("> You have quit the game. Bye!")
         current_room_key = 'QUIT'
     elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
         print("***Please enter one of the cardinal directions.***\n")
