@@ -48,10 +48,10 @@ room['treasure'].s_to = 'narrow'
 
 ### Items:
 room['outside'].item_list = [Item("Stick", "It's brown and sticky."), Item("Newspaper", "It appears to be black and white and read all over.")]
-room['foyer'].item_list = []
-room['overlook'].item_list = []
-room['narrow'].item_list = []
-room['treasure'].item_list = []
+room['foyer'].item_list = [Item("Ball", "Ball-shaped.")]
+room['overlook'].item_list = [Item("Parachute", "A folded-up parachute. Huh.")]
+room['narrow'].item_list = [Item("Doll", "A really, really creepy looking doll.")]
+room['treasure'].item_list = [Item("Money", "One million dollars, cash!")]
 
 #
 # Main
@@ -118,40 +118,44 @@ while current_room_key != 'QUIT':
     print("- - - - - - - - - - - - - - - - - - - - - - \n")
 
     user_input_array = user_input.split(" ")
-    # print(user_input_array)
 
-    try:
-        if user_input == 'q':
-            print("> You have quit the game. Bye!")
-            current_room_key = 'QUIT'
-        elif user_input == 'i':
-            display_inventory = False if display_inventory else True
-        elif len(user_input_array) == 2:
-            try:
-                if user_input_array[0] == 'get' or user_input_array[0] == 'take':
-                    item_name_input = user_input_array[1][:1].upper() + user_input_array[1][1:]
-                    # print(item_name_input)
-
-                    [item] = [x for x in current_room.item_list if x.name == item_name_input]
-                    current_room.item_list.remove(item)
-                    player.inventory.append(item)
-                elif user_input_array[0] == 'drop':
-                    None
-            except:
-                None
-            # item = current_room.item_list.pop(int(user_input) - 1)
-            # player.inventory.append(item)
-        elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
-            print("***Please enter one of the cardinal directions.***\n")
-        else:
-                next_room_key = current_room.enter(user_input)
-                # If this next line fails...
-                current_room = room[next_room_key]
-                # ... this never gets called:
-                current_room_key = next_room_key
-    except KeyError:
-        print("***Please choose an available direction for this room.***\n")
-    # except ValueError:
-    #     print("***Invalid input. Please try again.***\n")
+    if user_input == 'q':
+        print("> You have quit the game. Bye!")
+        current_room_key = 'QUIT'
+    elif user_input == 'i':
+        display_inventory = False if display_inventory else True
+    elif len(user_input_array) == 2:
+        # Need to format the item name:
+        item_name_input = user_input_array[1][:1].upper() + user_input_array[1][1:]
+        
+        try:
+            if user_input_array[0] == 'get' or user_input_array[0] == 'take':
+                # Then find the full object:
+                [item] = [item for item in current_room.item_list if item.name == item_name_input]
+                # And move it:
+                current_room.item_list.remove(item)
+                player.inventory.append(item)
+            elif user_input_array[0] == 'drop':
+                # Same kinda thing for dropping an item:
+                [item] = [item for item in player.inventory if item.name == item_name_input]
+                player.inventory.remove(item)
+                current_room.item_list.append(item)
+            else:
+                print(f"***What do you mean, '{user_input_array[0].upper()} {user_input_array[1]}'?***\n")
+        except ValueError:
+            print(f"***What '{item_name_input.upper()}'?***\n")
+    elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
+        print("***Invalid input. Please try again.***\n")
+    else:
+        try:
+            next_room_key = current_room.enter(user_input)
+            # If this next line fails...
+            current_room = room[next_room_key]
+            # ... this never gets called:
+            current_room_key = next_room_key
+        except KeyError:
+            print("***Please choose an available direction for this room.***\n")
+        # except ValueError:
+        #     print("***Invalid input. Please try again.***\n")
 
 
