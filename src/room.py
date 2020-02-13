@@ -35,9 +35,10 @@ class Room:
         return available_directions
 
     def print_items(self):
-        print("Items in this room:")
+        if len(self.item_list) > 0:
+            print("Items in this room:")
 
-        for i, item in enumerate(self.item_list):
-            print(textwrap.fill(f" - [{i + 1}]: {item}"))
-        
-        print("")
+            for i, item in enumerate(self.item_list):
+                print(textwrap.fill(f" - [{i + 1}]: {item}"))
+            
+            print("")
