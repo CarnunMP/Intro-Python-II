@@ -74,12 +74,16 @@ player = Player('Carnun', current_room_key)
 
 print("- - - - - - - - - - - - - - - - - - - - - - \n")
 
+display_inventory = False
+
 while current_room_key != 'QUIT':
     current_room = room[current_room_key]
 
     print(f'You are in {current_room.name}.')
-    print(textwrap.fill(current_room.description))
+    print(textwrap.fill(current_room.description) + "\n")
     current_room.print_items()
+
+    if display_inventory : player.print_inventory()
 
     prompt = "> Where would you like to go? "
 
@@ -99,9 +103,9 @@ while current_room_key != 'QUIT':
     for i, item in enumerate(current_room.item_list):
         prompt_items += f"'{i + 1}' to pick up the {item.name} or "
     prompt_items = prompt_items[:-4] + ".\n"
-    prompt += prompt_items if len(current_room.item_list) != 0 else ""
+    prompt += textwrap.fill(prompt_items if len(current_room.item_list) != 0 else "")
 
-    prompt += "> (Or enter 'q' to quit.) \n"
+    prompt += "\n> (Or enter 'q' to quit.) \n"
     prompt += ">>> "
 
     user_input = input(prompt).lower()
@@ -114,6 +118,8 @@ while current_room_key != 'QUIT':
         if user_input == 'q':
             print("> You have quit the game. Bye!")
             current_room_key = 'QUIT'
+        elif user_input == 'i':
+            display_inventory = True
         elif int(user_input) <= number_of_items:
             item = current_room.item_list.pop(int(user_input) - 1)
             player.inventory.append(item)
@@ -125,6 +131,7 @@ while current_room_key != 'QUIT':
                 current_room = room[next_room_key]
                 # ... this never gets called:
                 current_room_key = next_room_key
+                display_inventory = False
     except KeyError:
         print("***Please choose an available direction for this room.***\n")
     except ValueError:
