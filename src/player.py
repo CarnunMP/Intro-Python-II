@@ -15,6 +15,6 @@ class Player:
             print(f"Inventory:")
 
             for i, item in enumerate(self.inventory):
-                print(textwrap.fill(f" - Item [{i + 1}]: {item}"))
+                print(textwrap.fill(f" - [{i + 1}]: {item}"))
             
             print("")

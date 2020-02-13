@@ -38,6 +38,6 @@ class Room:
         print("Items in this room:")
 
         for i, item in enumerate(self.item_list):
-            print(textwrap.fill(f" - Item [{i + 1}]: {item}"))
+            print(textwrap.fill(f" - [{i + 1}]: {item}"))
         
         print("")
