@@ -143,11 +143,13 @@ while current_room_key != 'QUIT':
                 # And move it:
                 current_room.item_list.remove(item)
                 player.inventory.append(item)
+                item.on_take()
             elif user_input_array[0] == 'drop':
                 # Same kinda thing for dropping an item:
                 [item] = [item for item in player.inventory if item.name == item_name_input]
                 player.inventory.remove(item)
                 current_room.item_list.append(item)
+                item.on_drop()
             else:
                 print(f"***What do you mean, '{user_input_array[0].upper()} {user_input_array[1]}'?***\n")
         except ValueError:
