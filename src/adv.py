@@ -99,7 +99,7 @@ while current_room_key != 'QUIT':
     for i, item in enumerate(current_room.item_list):
         prompt_items += f"'{i + 1}' to pick up the {item.name} or "
     prompt_items = prompt_items[:-4] + ".\n"
-    prompt += prompt_items
+    prompt += prompt_items if len(current_room.item_list) != 0 else ""
 
     prompt += "> (Or enter 'q' to quit.) \n"
     prompt += ">>> "
@@ -128,6 +128,6 @@ while current_room_key != 'QUIT':
     except KeyError:
         print("***Please choose an available direction for this room.***\n")
     except ValueError:
-        print("***Invalid input. Please try again***\n")
+        print("***Invalid input. Please try again.***\n")
 
 
