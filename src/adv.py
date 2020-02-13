@@ -108,19 +108,26 @@ while current_room_key != 'QUIT':
 
     print("- - - - - - - - - - - - - - - - - - - - - - \n")
 
-    if user_input == 'q':
-        print("> You have quit the game. Bye!")
-        current_room_key = 'QUIT'
-    elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
-        print("***Please enter one of the cardinal directions.***\n")
-    else:
-        try:
-            next_room_key = current_room.enter(user_input)
-            # If this next line fails...
-            current_room = room[next_room_key]
-            # ... this never gets called:
-            current_room_key = next_room_key
-        except KeyError:
-            print("***Please choose an available direction for this room.***\n")
+    number_of_items = len(current_room.item_list)
+
+    try:
+        if user_input == 'q':
+            print("> You have quit the game. Bye!")
+            current_room_key = 'QUIT'
+        elif int(user_input) <= number_of_items:
+            item = current_room.item_list.pop(int(user_input) - 1)
+            player.inventory.append(item)
+        elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
+            print("***Please enter one of the cardinal directions.***\n")
+        else:
+                next_room_key = current_room.enter(user_input)
+                # If this next line fails...
+                current_room = room[next_room_key]
+                # ... this never gets called:
+                current_room_key = next_room_key
+    except KeyError:
+        print("***Please choose an available direction for this room.***\n")
+    except ValueError:
+        print("***Invalid input. Please try again***\n")
 
 
