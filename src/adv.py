@@ -100,11 +100,19 @@ while current_room_key != 'QUIT':
         prompt_directions = f"> Enter {available_directions[0]}, {available_directions[1]}, {available_directions[2]}, or {available_directions[4]}.\n"
     prompt += prompt_directions
 
-    prompt_items = "> Alternatively, enter "
-    for i, item in enumerate(current_room.item_list):
-        prompt_items += f"'{i + 1}' to pick up the {item.name} or "
+    prompt_items = "> Or, enter "
+    for item in current_room.item_list:
+        prompt_items += f"'get/take {item.name.lower()}' to pick up the {item.name} or "
     prompt_items = prompt_items[:-4] + ".\n"
     prompt += textwrap.fill(prompt_items if len(current_room.item_list) != 0 else "")
+
+    prompt += "\n" if len(current_room.item_list) > 0 and len(player.inventory) > 0 else ""
+
+    prompt_inventory = "> Or, enter "
+    for item in player.inventory:
+        prompt_inventory += f"'drop {item.name.lower()}' to drop {item.name} or "
+    prompt_inventory = prompt_inventory[:-4] + ".\n"
+    prompt += textwrap.fill(prompt_inventory if len(player.inventory) != 0 else "")
 
     prompt += f"\n> Or, enter 'i' to "
     prompt += "hide " if display_inventory else "show "
