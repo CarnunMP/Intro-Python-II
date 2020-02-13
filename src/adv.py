@@ -78,6 +78,7 @@ display_inventory = False
 
 while current_room_key != 'QUIT':
     current_room = room[current_room_key]
+    number_of_items = len(current_room.item_list)
 
     print(f'You are in {current_room.name}.')
     print(textwrap.fill(current_room.description) + "\n")
@@ -109,7 +110,6 @@ while current_room_key != 'QUIT':
     prompt += "hide " if display_inventory else "show "
     prompt += "your inventory.\n"
     
-    
     prompt += "> (Or 'q' to quit.) \n"
     prompt += ">>> "
 
@@ -117,7 +117,8 @@ while current_room_key != 'QUIT':
 
     print("- - - - - - - - - - - - - - - - - - - - - - \n")
 
-    number_of_items = len(current_room.item_list)
+    user_input_array = user_input.split(" ")
+    # print(user_input_array)
 
     try:
         if user_input == 'q':
@@ -125,9 +126,21 @@ while current_room_key != 'QUIT':
             current_room_key = 'QUIT'
         elif user_input == 'i':
             display_inventory = False if display_inventory else True
-        elif int(user_input) <= number_of_items:
-            item = current_room.item_list.pop(int(user_input) - 1)
-            player.inventory.append(item)
+        elif len(user_input_array) == 2:
+            try:
+                if user_input_array[0] == 'get' or user_input_array[0] == 'take':
+                    item_name_input = user_input_array[1][:1].upper() + user_input_array[1][1:]
+                    # print(item_name_input)
+
+                    [item] = [x for x in current_room.item_list if x.name == item_name_input]
+                    current_room.item_list.remove(item)
+                    player.inventory.append(item)
+                elif user_input_array[0] == 'drop':
+                    None
+            except:
+                None
+            # item = current_room.item_list.pop(int(user_input) - 1)
+            # player.inventory.append(item)
         elif user_input != 'n' and user_input != 'e' and user_input != 's' and user_input != 'w':
             print("***Please enter one of the cardinal directions.***\n")
         else:
@@ -138,7 +151,7 @@ while current_room_key != 'QUIT':
                 current_room_key = next_room_key
     except KeyError:
         print("***Please choose an available direction for this room.***\n")
-    except ValueError:
-        print("***Invalid input. Please try again.***\n")
+    # except ValueError:
+    #     print("***Invalid input. Please try again.***\n")
 
 
